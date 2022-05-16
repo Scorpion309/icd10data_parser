@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from requests import RequestException
 from settings import URL, FULL_URL, LOGGING_LEVEL
+from db import connect_to_db
 
 logging.basicConfig(level=LOGGING_LEVEL)
 
@@ -47,17 +48,24 @@ def save_to_json(data):
 if __name__ == '__main__':
     def parse():
         logging.info('Получаю данные с сайта...')
-        groups_elements = get_groups_elements(get_html(FULL_URL))
-        groups_info = get_info_from_elements(groups_elements)
-        for group_code, group_info in groups_info.items():
-            detailed_groups_elements = get_detailed_elements(get_html(group_info['link']))
-            detailed_groups_info = get_info_from_elements(detailed_groups_elements)
-            for detailed_group_code, detailed_group_info in detailed_groups_info.items():
-                time.sleep(3)
-                elements = get_detailed_elements(get_html(detailed_group_info['link']))
-                elements_info = get_info_from_elements(elements)
-                detailed_groups_info[detailed_group_code].update(elements_info)
-            groups_info[group_code].update(detailed_groups_info)
+        # groups_elements = get_groups_elements(get_html(FULL_URL))
+        # groups_info = get_info_from_elements(groups_elements)
+        # for group_code, group_info in groups_info.items():
+        #     detailed_groups_elements = get_detailed_elements(get_html(group_info['link']))
+        #     detailed_groups_info = get_info_from_elements(detailed_groups_elements)
+        #     for detailed_group_code, detailed_group_info in detailed_groups_info.items():
+        #         time.sleep(2)
+        #         elements = get_detailed_elements(get_html(detailed_group_info['link']))
+        #         elements_info = get_info_from_elements(elements)
+        #         detailed_groups_info[detailed_group_code].update(elements_info)
+        #     groups_info[group_code].update(detailed_groups_info)
+
+        connect_to_db()
+        with open('data.json', 'r') as inputfile:
+            groups_info = json.load(inputfile)
+
+
+
         logging.info('Данные получены! Сохраняю...')
         save_to_json(groups_info)
 
