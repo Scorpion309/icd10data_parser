@@ -51,7 +51,7 @@ def save_to_json(data):
 
 if __name__ == '__main__':
     def parse():
-        logging.info(f'Getting data from the site {FULL_URL}...')
+        logging.info(f'Starting work...\nGetting data from the site {FULL_URL}...')
 
         groups_elements = get_groups_elements(get_html(FULL_URL))
         groups_info = get_info_from_elements(groups_elements)
